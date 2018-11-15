@@ -35,8 +35,4 @@ public class UserController {
         User user = userService.testTransaction();
         return user;
     }
-
-    public String test(){
-        return "test";
-    }
 }
