@@ -1,6 +1,7 @@
 package com.example.demo.common.config;
 
 import com.example.demo.common.interceptor.LogInterceptor;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
@@ -12,10 +13,19 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
  */
 @Configuration
 public class WebConfigAdapter extends WebMvcConfigurerAdapter {
+
+    /**
+     * 若想拦截器中的bean注入成功，则应该使用这种方式获取拦截器
+     * @return
+     */
+    @Bean
+    LogInterceptor getLogInterceptor(){
+        return new LogInterceptor();
+    }
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         //addPathPatterns用于设置拦截规则，excludePathPatterns用于排除拦截
-        registry.addInterceptor(new LogInterceptor()).addPathPatterns("/*").excludePathPatterns("/login");
+        registry.addInterceptor(getLogInterceptor()).addPathPatterns("/*").excludePathPatterns("/login");
         super.addInterceptors(registry);
     }
 

@@ -2,6 +2,7 @@ package com.example.demo.common.interceptor;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
@@ -17,6 +18,9 @@ public class LogInterceptor implements HandlerInterceptor {
 
     private static final Logger log = LoggerFactory.getLogger(LogInterceptor.class);
 
+    @Value("${spring.redis.port}")
+    private String value;
+
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         /*取得调用的controller方法等*/
@@ -24,6 +28,7 @@ public class LogInterceptor implements HandlerInterceptor {
             HandlerMethod hMethod = (HandlerMethod)handler;
             Class<?> hClass = hMethod.getBean().getClass();
             Method method = hMethod.getMethod();
+            System.out.println(value);
             log.info("logInterceptor.preHandle()--Controller Name:"+hClass.getName()+"--method Name:"+method.getName());
         }
         return true;
