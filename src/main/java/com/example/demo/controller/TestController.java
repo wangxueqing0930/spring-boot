@@ -21,9 +21,4 @@ public class TestController {
         logger.info("测试spring boot");
         return "Hello SpringBoot2 !";
     }
-
-
-    public String test(){
-        return "test";
-    }
 }
