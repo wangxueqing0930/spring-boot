@@ -1,7 +1,11 @@
 package com.example.demo.service;
 
+import com.alibaba.dubbo.config.annotation.Reference;
 import com.example.demo.dao.UserMapper;
 import com.example.demo.model.User;
+import com.example.demo01.api.UserDubboService;
+import com.example.demo01.model.UserEntity;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -21,13 +25,22 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserMapper userMapper;
 
+    @Reference
+    private UserDubboService userDubboService;
+
     @Resource
     private RedisTemplate<String,Object> redissTemplate;
 
     @Override
     @Cacheable(value="thisredis",key="'user_'+#id")
     public User getUserById(Integer id) {
-        User user = userMapper.getById(id);
+        UserEntity userEntity = userDubboService.getUserById(id);
+        User user = new User();
+        if(null != userEntity){
+            BeanUtils.copyProperties(userEntity,user);
+        }else{
+            user = userMapper.getById(id);
+        }
         redissTemplate.opsForValue().set("user_"+id,user);
         return user;
     }

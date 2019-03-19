@@ -24,9 +24,8 @@ public class UserController {
     private UserService userService;
 
     @RequestMapping(value = "/test",method = RequestMethod.GET)
-    public User test(@RequestParam(value = "id") Integer id){
+    public User test(@RequestParam Integer id){
         User user = userService.getUserById(id);
-        logger.info(user.getName());
         return user;
     }
 
